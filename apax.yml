@@ -1,10 +1,10 @@
 # General information
-name: "lgencomp"
+name: "@simatic-ax/lgencomp"
 version: 0.0.0-placeholder
 author: Siemens AG
 
 # Description will be displayed in the apax extension
-description: <add your description here, which will be shown in the apax extension>
+description: Provided functionality to compensate the position of a SIMATIC Motion Control technology object based on a compensation table.
 type: lib
 
 #URL to the repository
@@ -25,12 +25,16 @@ registries:
 # The public key to verify dependencies coming from the GitHub community. This ensures, that the package is
 # not tampered with.
 publicKeys:
-  "@simatic-ax": "3792a7e926775425ccdd29ceed8c368c3008b5b33d7d5550b3cb1f58093e1dff"
+  "@simatic-ax":
+    "v1": "3792a7e926775425ccdd29ceed8c368c3008b5b33d7d5550b3cb1f58093e1dff"
+    "v2": "7af3e394eb2b285a3d99ab8e1f745cc6db75704b30a80393339c721a92ffffd9"
 
 # Dependencies
 devDependencies:
-  '@ax/sdk': ^2504.0.0
+  '@ax/sdk': ^2510.1.0
   "@simatic-ax/snippetscollection": ^1.0.0
+  "@ax/st-lang-contrib-library-toolbox": ^0.21.1
+  "@ax/axunit-mocking": ^8.4.20
 
 # Project variables
 variables:
@@ -47,4 +51,9 @@ files:
 
 # Catalog to be intalled
 catalogs:
-  "@ax/simatic-ax": ^2504.0.0
+  "@ax/simatic-ax": ^2510.1.0
+
+dependencies:
+  "@ax/simatic-motioncontrol-native-v9": ^10.0.9
+  "@ax/simatic-memoryaccess": ^6.0.19
+  "@ax/system-math": ^10.2.7
