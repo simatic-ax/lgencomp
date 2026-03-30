@@ -245,7 +245,7 @@ PROGRAM MotionPreServoProgram
 END_PROGRAM
 ```
 
-In this example, both the X-axis and Y-axis positions are evaluated as inputs for separate compensation table lookups. Two instances of [`Compensation`](lgencomp/docs/function-blocks/LGenComp_Compensation.md) are called, both targeting the Z-axis with their respective compensation increments.
+In this example, both the X-axis and Y-axis positions are evaluated as inputs for separate compensation table lookups. Two instances of [`Compensation`](./docs/function-blocks/LGenComp_Compensation.md) are called, both targeting the Z-axis with their respective compensation increments.
 
 ### Leadscrew compensation
 
