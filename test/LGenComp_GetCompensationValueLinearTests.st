@@ -5,9 +5,9 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
     {TestFixture}
     CLASS TestLGenCompGetCompensationValueLinear
         VAR
-            testArray : ARRAY[0..4] OF LGenComp_typeCompensationElement;
+            testArray : ARRAY[0..4] OF typeCompensationElement;
             result : LREAL;
-            status : LGenComp_GetCompensationValueStatus;
+            status : GetCompensationValueStatus;
         END_VAR
 
         {TestSetup}
@@ -28,41 +28,41 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
         {Test}
         METHOD PUBLIC TestInterpolationAtTableStart
             // Test interpolation at the first point
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 0.0,
                 compensationArray := testArray,
                 status => status
             );
 
             Equal(actual := result, expected := 0.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestInterpolationAtTableEnd
             // Test interpolation at the last point
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 40.0,
                 compensationArray := testArray,
                 status => status
             );
 
             Equal(actual := result, expected := 30.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestInterpolationBetweenPoints
             // Test interpolation between first and second point
             // At x=5.0, should be halfway between y=0.0 and y=5.0 = 2.5
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 5.0,
                 compensationArray := testArray,
                 status => status
             );
 
             Equal(actual := result, expected := 2.5);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
@@ -70,20 +70,20 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             // Test interpolation in the middle of the table
             // At x=25.0, between x=20.0 (y=15.0) and x=30.0 (y=20.0)
             // Should be 15.0 + (20.0-15.0) * (25.0-20.0)/(30.0-20.0) = 15.0 + 2.5 = 17.5
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 25.0,
                 compensationArray := testArray,
                 status => status
             );
 
             Equal(actual := result, expected := 17.5);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestClampingBelowMinimum
             // Test clamping when x-value is below minimum
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := -10.0,
                 compensationArray := testArray,
                 status => status
@@ -91,13 +91,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should clamp to minimum and return value at x=0.0
             Equal(actual := result, expected := 0.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE);
+            Equal(actual := status, expected := GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestClampingAboveMaximum
             // Test clamping when x-value is above maximum
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 50.0,
                 compensationArray := testArray,
                 status => status
@@ -105,13 +105,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should clamp to maximum and return value at x=40.0
             Equal(actual := result, expected := 30.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE);
+            Equal(actual := status, expected := GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestInverseTable
             VAR
-                inverseArray : ARRAY[0..4] OF LGenComp_typeCompensationElement;
+                inverseArray : ARRAY[0..4] OF typeCompensationElement;
             END_VAR
 
             // Create a table with descending x-values
@@ -130,7 +130,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             inverseArray[4].yValue := 0.0;
 
             // Test interpolation in inverse table
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 25.0,
                 compensationArray := inverseArray,
                 status => status
@@ -139,13 +139,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             // At x=25.0, between x=30.0 (y=20.0) and x=20.0 (y=15.0)
             // Should be 20.0 + (15.0-20.0) * (25.0-30.0)/(20.0-30.0) = 20.0 - 2.5 = 17.5
             Equal(actual := result, expected := 17.5);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestSingleSegmentTable
             VAR
-                singleSegmentArray : ARRAY[0..1] of LGenComp_typeCompensationElement;
+                singleSegmentArray : ARRAY[0..1] of typeCompensationElement;
             END_VAR
 
             // Create a table with only 2 points (single segment)
@@ -157,7 +157,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             singleSegmentArray[1].yValue := 50.0;
 
             // Test interpolation at 50% (x=50.0)
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 50.0,
                 compensationArray := singleSegmentArray,
                 status => status
@@ -165,13 +165,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should be 10.0 + (50.0-10.0) * 0.5 = 30.0
             Equal(actual := result, expected := 30.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestNegativeValues
             VAR
-                negativeArray : ARRAY[0..3] OF LGenComp_typeCompensationElement;
+                negativeArray : ARRAY[0..3] OF typeCompensationElement;
             END_VAR
 
             // Create a table with negative values
@@ -187,7 +187,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
 
             // Test interpolation at x=-5.0 (between -10.0 and 0.0)
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := -5.0,
                 compensationArray := negativeArray,
                 status => status
@@ -195,26 +195,26 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should be -5.0 + (0.0-(-5.0)) * (-5.0-(-10.0))/(0.0-(-10.0)) = -5.0 + 2.5 = -2.5
             Equal(actual := result, expected := -2.5);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestExactTablePoint
             // Test when x-value exactly matches a table point
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 20.0,
                 compensationArray := testArray,
                 status => status
             );
 
             Equal(actual := result, expected := 15.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestVerySmallInterval
             VAR
-                smallIntervalArray : ARRAY[0..2] OF LGenComp_typeCompensationElement;
+                smallIntervalArray : ARRAY[0..2] OF typeCompensationElement;
             END_VAR
 
             // Create a table with very small x-intervals
@@ -227,7 +227,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             smallIntervalArray[2].yValue := 20.0;
 
             // Test interpolation at x=0.0015 (between 0.001 and 0.002)
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 0.0015,
                 compensationArray := smallIntervalArray,
                 status => status
@@ -235,12 +235,12 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should be 10.0 + (20.0-10.0) * (0.0015-0.001)/(0.002-0.001) = 10.0 + 5.0 = 15.0
             Equal(actual := result, expected := 15.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
         {Test}
         METHOD PUBLIC TestLargeArray50Elements
             VAR
-                largeArray : ARRAY[0..49] OF LGenComp_typeCompensationElement;
+                largeArray : ARRAY[0..49] OF typeCompensationElement;
                 i : INT;
             END_VAR
 
@@ -255,7 +255,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             // Test interpolation at x=25.0 (between x=24.0 and x=26.0)
             // At i=12: x=24.0, y=144.0
             // At i=13: x=26.0, y=169.0
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 25.0,
                 compensationArray := largeArray,
                 status => status
@@ -263,13 +263,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should be 144.0 + (169.0-144.0) * (25.0-24.0)/(26.0-24.0) = 144.0 + 12.5 = 156.5
             Equal(actual := result, expected := 156.5);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestLargeArrayInterpolationNearStart
             VAR
-                largeArray : ARRAY[0..49] OF LGenComp_typeCompensationElement;
+                largeArray : ARRAY[0..49] OF typeCompensationElement;
                 i : INT;
             END_VAR
 
@@ -282,7 +282,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             END_FOR;
 
             // Test interpolation near the start at x=1.5
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 1.5,
                 compensationArray := largeArray,
                 status => status
@@ -290,13 +290,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should be 10.0 + (20.0-10.0) * 0.5 = 15.0
             Equal(actual := result, expected := 15.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestLargeArrayInterpolationNearEnd
             VAR
-                largeArray : ARRAY[0..49] OF LGenComp_typeCompensationElement;
+                largeArray : ARRAY[0..49] OF typeCompensationElement;
                 i : INT;
             END_VAR
 
@@ -309,7 +309,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             END_FOR;
 
             // Test interpolation near the end at x=47.7
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 47.7,
                 compensationArray := largeArray,
                 status => status
@@ -318,13 +318,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             // Between x=47.0 (y=470.0) and x=48.0 (y=480.0)
             // Should be 470.0 + (480.0-470.0) * 0.7 = 477.0
             Equal(actual := result, expected := 477.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestLargeArrayClampingBelowMin
             VAR
-                largeArray : ARRAY[0..49] OF LGenComp_typeCompensationElement;
+                largeArray : ARRAY[0..49] OF typeCompensationElement;
                 i : INT;
             END_VAR
 
@@ -337,7 +337,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             END_FOR;
 
             // Test clamping below minimum
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 50.0,
                 compensationArray := largeArray,
                 status => status
@@ -345,13 +345,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should clamp to minimum and return value at x=100.0
             Equal(actual := result, expected := 0.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE);
+            Equal(actual := status, expected := GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestLargeArrayClampingAboveMax
             VAR
-                largeArray : ARRAY[0..49] OF LGenComp_typeCompensationElement;
+                largeArray : ARRAY[0..49] OF typeCompensationElement;
                 i : INT;
             END_VAR
 
@@ -364,7 +364,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             END_FOR;
 
             // Test clamping above maximum
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 100.0,
                 compensationArray := largeArray,
                 status => status
@@ -372,13 +372,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should clamp to maximum and return value at x=49.0
             Equal(actual := result, expected := 1098.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE);
+            Equal(actual := status, expected := GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestLargeArrayNonUniformSpacing
             VAR
-                largeArray : ARRAY[0..49] OF LGenComp_typeCompensationElement;
+                largeArray : ARRAY[0..49] OF typeCompensationElement;
                 i : INT;
             END_VAR
 
@@ -396,7 +396,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             // Test interpolation in the wide-spacing section at x=150.0
             // Between x=130.0 (i=29: 50+4*20=130, y=250+4*50=450)
             // and x=150.0 (i=30: 50+5*20=150, y=250+5*50=500)
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 150.0,
                 compensationArray := largeArray,
                 status => status
@@ -404,13 +404,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // At exact point x=150.0, y=500.0
             Equal(actual := result, expected := 500.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestLargeArrayMiddleInterpolation
             VAR
-                largeArray : ARRAY[0..49] OF LGenComp_typeCompensationElement;
+                largeArray : ARRAY[0..49] OF typeCompensationElement;
                 i : INT;
             END_VAR
 
@@ -424,7 +424,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Test interpolation in the middle at x=122.5
             // Between x=120.0 (i=24, y=60.0) and x=125.0 (i=25, y=62.5)
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 122.5,
                 compensationArray := largeArray,
                 status => status
@@ -432,13 +432,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should be 60.0 + (62.5-60.0) * (122.5-120.0)/(125.0-120.0) = 60.0 + 1.25 = 61.25
             Equal(actual := result, expected := 61.25);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestLargeArrayInverseOrder
             VAR
-                largeArray : ARRAY[0..49] OF LGenComp_typeCompensationElement;
+                largeArray : ARRAY[0..49] OF typeCompensationElement;
                 i : INT;
             END_VAR
 
@@ -452,7 +452,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Test interpolation at x=255.0
             // Between x=260.0 (i=24, y=1200.0) and x=250.0 (i=25, y=1250.0)
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 255.0,
                 compensationArray := largeArray,
                 status => status
@@ -461,12 +461,12 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             // Should be 1200.0 + (1250.0-1200.0) * (255.0-260.0)/(250.0-260.0)
             // = 1200.0 + 50.0 * 0.5 = 1225.0
             Equal(actual := result, expected := 1225.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
             {Test}
         METHOD PUBLIC TestSingleElementArray
             VAR
-                singleElementArray : ARRAY[0..0] OF LGenComp_typeCompensationElement;
+                singleElementArray : ARRAY[0..0] OF typeCompensationElement;
             END_VAR
 
             // Create a single element array
@@ -474,7 +474,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             singleElementArray[0].yValue := 100.0;
 
             // Test with x-value equal to the single element
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 42.0,
                 compensationArray := singleElementArray,
                 status => status
@@ -482,13 +482,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should return the single y-value
             Equal(actual := result, expected := 100.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestSingleElementArrayDifferentXValue
             VAR
-                singleElementArray : ARRAY[0..0] OF LGenComp_typeCompensationElement;
+                singleElementArray : ARRAY[0..0] OF typeCompensationElement;
             END_VAR
 
             // Create a single element array
@@ -496,7 +496,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             singleElementArray[0].yValue := 50.0;
 
             // Test with x-value different from the single element
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 100.0,
                 compensationArray := singleElementArray,
                 status => status
@@ -504,12 +504,12 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should return the single y-value but with clamping warning
             Equal(actual := result, expected := 50.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE);
+            Equal(actual := status, expected := GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE);
         END_METHOD
         {Test}
         METHOD PUBLIC TestNegativeIndexArray
             VAR
-                negativeIndexArray : ARRAY[-10..-6] OF LGenComp_typeCompensationElement;
+                negativeIndexArray : ARRAY[-10..-6] OF typeCompensationElement;
             END_VAR
 
             // Create array with negative indices [-10..-6]
@@ -528,7 +528,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             negativeIndexArray[-6].yValue := 30.0;
 
             // Test interpolation at x=25.0 (between x=20.0 and x=30.0)
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 25.0,
                 compensationArray := negativeIndexArray,
                 status => status
@@ -536,13 +536,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should be 15.0 + (20.0-15.0) * (25.0-20.0)/(30.0-20.0) = 17.5
             Equal(actual := result, expected := 17.5);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestNegativeToPositiveIndexArray
             VAR
-                crossZeroArray : ARRAY[-3..3] OF LGenComp_typeCompensationElement;
+                crossZeroArray : ARRAY[-3..3] OF typeCompensationElement;
             END_VAR
 
             // Create array spanning negative to positive indices [-3..3]
@@ -565,7 +565,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             crossZeroArray[3].yValue := 9.0;
 
             // Test interpolation at x=15.0 (between x=10.0 and x=20.0)
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 15.0,
                 compensationArray := crossZeroArray,
                 status => status
@@ -573,13 +573,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should be 1.0 + (4.0-1.0) * (15.0-10.0)/(20.0-10.0) = 1.0 + 1.5 = 2.5
             Equal(actual := result, expected := 2.5);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestPositiveOffsetIndexArray
             VAR
-                offsetArray : ARRAY[100..105] OF LGenComp_typeCompensationElement;
+                offsetArray : ARRAY[100..105] OF typeCompensationElement;
             END_VAR
 
             // Create array with high positive offset [100..105]
@@ -600,7 +600,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             offsetArray[105].yValue := 200.0;
 
             // Test interpolation at x=50.0 (between x=40.0 and x=60.0)
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 50.0,
                 compensationArray := offsetArray,
                 status => status
@@ -608,13 +608,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should be 140.0 + (160.0-140.0) * (50.0-40.0)/(60.0-40.0) = 140.0 + 10.0 = 150.0
             Equal(actual := result, expected := 150.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestNegativeIndexClampingBehavior
             VAR
-                negativeArray : ARRAY[-5..-1] OF LGenComp_typeCompensationElement;
+                negativeArray : ARRAY[-5..-1] OF typeCompensationElement;
             END_VAR
 
             // Create array with negative indices [-5..-1]
@@ -633,7 +633,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             negativeArray[-1].yValue := 500.0;
 
             // Test clamping below minimum
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 5.0,
                 compensationArray := negativeArray,
                 status => status
@@ -641,13 +641,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should clamp to minimum and return value at x=10.0
             Equal(actual := result, expected := 100.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE);
+            Equal(actual := status, expected := GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestNegativeIndexInverseOrder
             VAR
-                inverseNegArray : ARRAY[-8..-4] OF LGenComp_typeCompensationElement;
+                inverseNegArray : ARRAY[-8..-4] OF typeCompensationElement;
             END_VAR
 
             // Create inverse array with negative indices [-8..-4]
@@ -666,7 +666,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             inverseNegArray[-4].yValue := 0.0;
 
             // Test interpolation at x=25.0
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 25.0,
                 compensationArray := inverseNegArray,
                 status => status
@@ -674,13 +674,13 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should be 20.0 + (15.0-20.0) * (25.0-30.0)/(20.0-30.0) = 20.0 - 2.5 = 17.5
             Equal(actual := result, expected := 17.5);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestSingleElementNegativeIndex
             VAR
-                singleNegArray : ARRAY[-42..-42] OF LGenComp_typeCompensationElement;
+                singleNegArray : ARRAY[-42..-42] OF typeCompensationElement;
             END_VAR
 
             // Create single element array with negative index
@@ -688,20 +688,20 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             singleNegArray[-42].yValue := 123.45;
 
             // Test with matching x-value
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 99.0,
                 compensationArray := singleNegArray,
                 status => status
             );
 
             Equal(actual := result, expected := 123.45);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
 
         {Test}
         METHOD PUBLIC TestLargeNegativeIndexArray
             VAR
-                largeNegArray : ARRAY[-30..19] OF LGenComp_typeCompensationElement;
+                largeNegArray : ARRAY[-30..19] OF typeCompensationElement;
                 i : INT;
             END_VAR
 
@@ -716,7 +716,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
             // Test interpolation at x=51.0
             // At i=-5 (actual index 25): x=50.0, y=250.0
             // At i=-4 (actual index 26): x=52.0, y=260.0
-            result := LGenComp_GetCompensationValueLinear(
+            result := GetCompensationValueLinear(
                 xValue := 51.0,
                 compensationArray := largeNegArray,
                 status => status
@@ -724,7 +724,7 @@ NAMESPACE Simatic.Ax.lgencomp.Tests
 
             // Should be 250.0 + (260.0-250.0) * (51.0-50.0)/(52.0-50.0) = 250.0 + 5.0 = 255.0
             Equal(actual := result, expected := 255.0);
-            Equal(actual := status, expected := LGenComp_GetCompensationValueStatus#STATE_VALID);
+            Equal(actual := status, expected := GetCompensationValueStatus#STATE_VALID);
         END_METHOD
     END_CLASS
 END_NAMESPACE

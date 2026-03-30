@@ -18,21 +18,21 @@ The library is organized into the following main components:
 
 ### Compensation Function Block
 
-- [`LGenComp_Compensation`](./function-blocks/LGenComp_Compensation.md): Function block for compensating an axis position by a compensation value via encoder increment adjustment.
+- [`Compensation`](./function-blocks/LGenComp_Compensation.md): Function block for compensating an axis position by a compensation value via encoder increment adjustment.
 
 ### Compensation value retrieval
 
-- [`LGenComp_GetCompensationValueLinear`](./functions/LGenComp_GetCompensationValueLinear.md): Function for retrieving a compensation value from a compensation array for a given x-value with a linear interpolation.
+- [`GetCompensationValueLinear`](./functions/LGenComp_GetCompensationValueLinear.md): Function for retrieving a compensation value from a compensation array for a given x-value with a linear interpolation.
 
 ### Data Types
 
-- [`LGenComp_typeCompensationElement`](./types/LGenComp_typeCompensationElement.md)
-- [`LGenComp_typeSensorAddressIn`](./types/LGenComp_typeSensorAddressIn.md)
+- [`typeCompensationElement`](./types/LGenComp_typeCompensationElement.md)
+- [`typeSensorAddressIn`](./types/LGenComp_typeSensorAddressIn.md)
 
 ### Constants
 
-- [`LGenComp_GetCompensationValueStatusCodes`](./constants/LGenComp_GetCompensationValueStatusCodes.md): Status codes for the compensation value retrieval function.
-- [`LGenComp_CompensationStatusCodes`](./constants/LGenComp_CompensationStatusCodes.md): Status codes for the compensation function block.
+- [`GetCompensationValueStatusCodes`](./constants/LGenComp_GetCompensationValueStatusCodes.md): Status codes for the compensation value retrieval function.
+- [`CompensationStatusCodes`](./constants/LGenComp_CompensationStatusCodes.md): Status codes for the compensation function block.
 
 ## Migration from TIA Portal
 
@@ -40,4 +40,4 @@ This library has been migrated from TIA Portal to SIMATIC AX. The functionality 
 
 - Namespace: The library now uses the `Simatic.Ax.LGenComp` namespace
 - Data types: The data types have been adapted to SIMATIC AX conventions
-- Application sizing: The SIMATIC AX library uses a variable lenght `ARRAY[*] of LGenComp_typeCompensationElement` to retrieve the compensation value from arrays of user-defined sizes
+- Application sizing: The SIMATIC AX library uses a variable lenght `ARRAY[*] of typeCompensationElement` to retrieve the compensation value from arrays of user-defined sizes

@@ -3,14 +3,14 @@ USING Siemens.Simatic.MemoryAccess;
 USING Siemens.Simatic.MotionControl.Native;
 USING Simatic.Ax.LGenComp;
 
-NAMESPACE Simatic.Ax.LgenComp.Tests
+NAMESPACE Simatic.Ax.LGenComp.Tests
 
     {TestFixture}
-    CLASS LGenComp_CompensationTests
+    CLASS CompensationTests
 
         VAR PRIVATE
-            instCompensation : LGenComp_Compensation;
-            sensor : LGenComp_typeSensorAddressIn;
+            instCompensation : Compensation;
+            sensor : typeSensorAddressIn;
         END_VAR
 
         {Test}
@@ -40,7 +40,7 @@ NAMESPACE Simatic.Ax.LgenComp.Tests
             Assert.Equal(expected := FALSE, actual := instCompensation.valid);
             Assert.Equal(expected := FALSE, actual := instCompensation.busy);
             Assert.Equal(expected := FALSE, actual := instCompensation.error);
-            Assert.Equal(expected := LGenComp_CompensationStatus#STATUS_NO_CALL, actual := instCompensation.status);
+            Assert.Equal(expected := CompensationStatus#STATUS_NO_CALL, actual := instCompensation.status);
         END_METHOD
 
         {Test}

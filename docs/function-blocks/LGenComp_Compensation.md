@@ -1,8 +1,8 @@
-# LGenComp_Compensation
+# LGenComp.Compensation
 
 ## Principle of operation
 
-The function block `LGenComp_Compensation` is the main part of the block library LGenComp and manages the compensation of the technology object position based on directly applying a corrective value to the encoder increments.
+The function block `Compensation` is the main part of the block library LGenComp and manages the compensation of the technology object position based on directly applying a corrective value to the encoder increments.
 
 The compensation is applied to the `G1_XIST1` field in the PROFIdrive telegram.
 
@@ -15,7 +15,7 @@ For Telegram 105, the `G1_XIST1` value is transferred at an offset of 12 bytes, 
         Control → Converter
 
         | Process data | Signal | Explanation |
-        |--------------|--------|-------------|
+        | ------------ | ------ | ----------- |
         | PZD01 | STW1 | Control word 1 |
         | PZD02 | NSOLL_B | 32-bit speed setpoint |
         | PZD03 | NSOLL_B | 32-bit speed setpoint |
@@ -29,7 +29,7 @@ For Telegram 105, the `G1_XIST1` value is transferred at an offset of 12 bytes, 
         Converter → Control
 
         | Process data | Signal | Explanation |
-        |--------------|--------|-------------|
+        | ------------ | ------ | ----------- |
         | PZD01 | ZSW1 | Status word 1 |
         | PZD02 | NIST_B | Speed actual value 32-bit |
         | PZD03 | NIST_B | Speed actual value 32-bit |
@@ -49,7 +49,7 @@ For Telegram 105, the `G1_XIST1` value is transferred at an offset of 12 bytes, 
         Control → Converter
 
         | Process data | Signal | Explanation |
-        |--------------|--------|-------------|
+        | ------------ | ------ | ----------- |
         | PZD01 | STW1 | Control word 1 |
         | PZD02 | NSOLL_B | 32-bit speed setpoint |
         | PZD03 | NSOLL_B | 32-bit speed setpoint |
@@ -64,7 +64,7 @@ For Telegram 105, the `G1_XIST1` value is transferred at an offset of 12 bytes, 
         Converter → Control
 
         | Process data | Signal | Explanation |
-        |--------------|--------|-------------|
+        | ------------ | ------ | ----------- |
         | PZD01 | ZSW1 | Status word 1 |
         | PZD02 | NIST_B | Speed actual value 32-bit |
         | PZD03 | NIST_B | Speed actual value 32-bit |
@@ -84,7 +84,7 @@ The subsequent user program is then operated using the corrected encoder positio
 ### Input Parameters
 
 | Parameter | Type | Description |
-|-----------|------|-------------|
+| --------- | ---- | ----------- |
 | enable | BOOL | TRUE: Enable functionality of FB |
 | axis | REF_TO TO_PositioningAxis | Technology object, also supports TO_SynchronousAxis |
 | compensationValue | LREAL | Compensation value |
@@ -95,19 +95,19 @@ The subsequent user program is then operated using the corrected encoder positio
 ### Output Parameters
 
 | Parameter | Type | Description |
-|-----------|------|-------------|
+| --------- | ---- | ----------- |
 | encoderIncrements | UDINT | Encoder value without compensation |
 | encoderPosition | LREAL | Encoder position without compensation |
 | compensationIncrements | DINT | Additional encoder increments based on compensation |
 | valid | BOOL | TRUE: Valid set of output values available at the FB |
 | busy | BOOL | TRUE: FB is not finished and new output values can be expected |
 | error | BOOL | TRUE: An error occurred during the execution of the FB |
-| status | [LGenComp_CompensationStatus](../constants/LGenComp_CompensationStatusCodes.md) | 16#0000 - 16#7FFF: Status of the FB, 16#8000 - 16#FFFF: Error identification |
+| status | [CompensationStatus](../constants/LGenComp_CompensationStatusCodes.md) | 16#0000 - 16#7FFF: Status of the FB, 16#8000 - 16#FFFF: Error identification |
 
 ### Status and error codes
 
 | Constant | Value | Description |
-|-----------|------|-------------|
+| -------- | ----- | ----------- |
 | STATUS_NO_CALL | WORD#16#7000 | No job being currently processed |
 | STATUS_FIRST_CALL | WORD#16#7001 | First call after incoming new job (rising edge 'enable') |
 | STATUS_SUBSEQUENT_CALL | WORD#16#7002 | Subsequent call during active processing without further details |

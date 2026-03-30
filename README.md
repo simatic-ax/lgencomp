@@ -51,11 +51,11 @@ The values for the compensation relation need to be captured by the user, typica
 
 | Functions   | Description             |
 |-------------|-------------------------|
-| [LGenComp_GetCompensationValueLinear](./docs/functions/LGenComp_GetCompensationValueLinear.md)      | Function for retrieving a compensation value from a compensation table for a given x-value with a linear interpolation. |
+| [GetCompensationValueLinear](./docs/functions/LGenComp_GetCompensationValueLinear.md)      | Function for retrieving a compensation value from a compensation table for a given x-value with a linear interpolation. |
 
 | Function Blocks | Description           |
 |-----------------|-----------------------|
-| [LGenComp_Compensation](./docs/function-blocks/LGenComp_Compensation.md)         | Function block for compensating an axis position by a compensation value via encoder increment adjustment |
+| [Compensation](./docs/function-blocks/LGenComp_Compensation.md)         | Function block for compensating an axis position by a compensation value via encoder increment adjustment |
 
 ## Examples
 
@@ -95,8 +95,8 @@ CONFIGURATION MyConfiguration
         axisRefs : ARRAY[1..3] OF REF_TO TO_PositioningAxis;
 
         // Compensation arrays
-        compensationArrayX : ARRAY[0..19] OF LGenComp_typeCompensationElement;
-        compensationArrayY : ARRAY[0..19] OF LGenComp_typeCompensationElement;
+        compensationArrayX : ARRAY[0..19] OF typeCompensationElement;
+        compensationArrayY : ARRAY[0..19] OF typeCompensationElement;
     END_VAR
 END_CONFIGURATION
 ```
@@ -143,8 +143,8 @@ PROGRAM MainProgram
     VAR_EXTERNAL
         posDBs : ARRAY[1..3] OF DB_ANY;
         axisRefs : ARRAY[1..3] OF REF_TO TO_PositioningAxis;
-        compensationArrayX : ARRAY[0..19] OF LGenComp_typeCompensationElement;
-        compensationArrayY : ARRAY[0..19] OF LGenComp_typeCompensationElement;
+        compensationArrayX : ARRAY[0..19] OF typeCompensationElement;
+        compensationArrayY : ARRAY[0..19] OF typeCompensationElement;
     END_VAR
 
     VAR
@@ -198,8 +198,8 @@ USING Siemens.Simatic.MotionControl.Native;
 PROGRAM MotionPreServoProgram
     VAR_EXTERNAL
         // Compensation tables (initialized in main program)
-        compensationArrayX : ARRAY [0..19] OF LGenComp_typeCompensationElement;
-        compensationArrayY : ARRAY [0..19] OF LGenComp_typeCompensationElement;
+        compensationArrayX : ARRAY [0..19] OF typeCompensationElement;
+        compensationArrayY : ARRAY [0..19] OF typeCompensationElement;
     END_VAR
 
     VAR_INPUT
@@ -210,8 +210,8 @@ PROGRAM MotionPreServoProgram
     END_VAR
 
     VAR
-        compZfromX : LGenComp_Compensation;   // Compensation instance for X influence
-        compZfromY : LGenComp_Compensation;   // Compensation instance for Y influence
+        compZfromX : Compensation;   // Compensation instance for X influence
+        compZfromY : Compensation;   // Compensation instance for Y influence
         compValueX : LREAL;                   // Compensation value from X position
         compValueY : LREAL;                   // Compensation value from Y position
         statusX : WORD;                       // Status X
@@ -226,8 +226,8 @@ PROGRAM MotionPreServoProgram
         yPos := yAxisRef^.ActualPosition;
 
         // Calculate compensation values based on X and Y positions
-        compValueX := LGenComp_GetCompensationValueLinear(xPos, compensationArrayX, statusX);
-        compValueY := LGenComp_GetCompensationValueLinear(yPos, compensationArrayY, statusY);
+        compValueX := GetCompensationValueLinear(xPos, compensationArrayX, statusX);
+        compValueY := GetCompensationValueLinear(yPos, compensationArrayY, statusY);
 
         // Apply both compensations to Z-axis
         compZfromX(
@@ -245,7 +245,7 @@ PROGRAM MotionPreServoProgram
 END_PROGRAM
 ```
 
-In this example, both the X-axis and Y-axis positions are evaluated as inputs for separate compensation table lookups. Two instances of [`LGenComp_Compensation`](lgencomp/docs/function-blocks/LGenComp_Compensation.md) are called, both targeting the Z-axis with their respective compensation increments.
+In this example, both the X-axis and Y-axis positions are evaluated as inputs for separate compensation table lookups. Two instances of [`Compensation`](lgencomp/docs/function-blocks/LGenComp_Compensation.md) are called, both targeting the Z-axis with their respective compensation increments.
 
 ### Leadscrew compensation
 
@@ -271,7 +271,7 @@ USING Siemens.Simatic.MotionControl.Native;
 PROGRAM MotionPreServoProgram
     VAR_EXTERNAL
         // Compensation table (initialized in main program)
-        leadscrewCompArray : ARRAY [0..49] OF LGenComp_typeCompensationElement;
+        leadscrewCompArray : ARRAY [0..49] OF typeCompensationElement;
     END_VAR
 
     VAR_INPUT
@@ -280,7 +280,7 @@ PROGRAM MotionPreServoProgram
     END_VAR
 
     VAR
-        compLeadscrew : LGenComp_Compensation;   // Compensation instance
+        compLeadscrew : Compensation;   // Compensation instance
         compValue : LREAL;                       // Current compensation value
         lastCompValue : LREAL;                   // Previous compensation value
         uncompensatedPos : LREAL;                // Position without compensation
@@ -292,7 +292,7 @@ PROGRAM MotionPreServoProgram
         uncompensatedPos := axisRef^.ActualPosition - lastCompValue;
 
         // Retrieve new compensation value based on uncompensated position
-        compValue := LGenComp_GetCompensationValueLinear(uncompensatedPos, leadscrewCompArray, status);
+        compValue := GetCompensationValueLinear(uncompensatedPos, leadscrewCompArray, status);
 
         // Apply compensation to the same axis
         compLeadscrew(
@@ -316,13 +316,13 @@ In leadscrew compensation, the encoder manipulation alters the same technology o
 
 The compensation functionality must be called in an **MC-PreServo** task. The following diagram shows the suggested call structure:
 
-1. **MC-PreServo OB**: Fetch compensation values and apply encoder increment corrections
+1. **MC-PreServo Task**: Fetch compensation values and apply encoder increment corrections
 2. **MC-Servo**: Motion control calculations with compensated positions
 3. **Cyclic User Program**: Motion control commands (MC_MoveAbsolute, etc.)
 
 #### Activation cycles
 
-The [`LGenComp_Compensation`](./docs/function-blocks/LGenComp_Compensation.md) function block features the `activationCycles` parameter for implementing a "soft start" behavior. This value parameterizes gradual ramping during both enabling and disabling states:
+The [`Compensation`](./docs/function-blocks/LGenComp_Compensation.md) function block features the `activationCycles` parameter for implementing a "soft start" behavior. This value parameterizes gradual ramping during both enabling and disabling states:
 
 ```iec-st
 compInstance(
