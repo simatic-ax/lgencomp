@@ -1,4 +1,4 @@
-# LGenComp_CompensationStatus
+# LGenComp.CompensationStatus
 
 | Constant | Value | Description |
 |-----------|------|-------------|

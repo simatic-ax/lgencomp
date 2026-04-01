@@ -1,23 +1,29 @@
 USING System.Math;
 NAMESPACE Simatic.Ax.LGenComp
-    ///===============================================================================
-    /// SIEMENS AG / (c)Copyright 2025
-    ///-------------------------------------------------------------------------------
-    /// Title:            LGenComp_GetCompensationValueLinear
-    /// Comment/Function: Function for retrieving a compensation value from a
-    ///                   compensation array for a given x-value.
-    /// Library/Family:   LGenComp
-    /// Author:           APC Erlangen
-    /// Engineering:      SIMATIC AX
-    ///===============================================================================
-    FUNCTION LGenComp_GetCompensationValueLinear : LREAL
+    ///================================================================================
+    /// SIEMENS AG
+    /// (c)Copyright 2026 All Rights Reserved
+    ///--------------------------------------------------------------------------------
+    /// Library:       LGenComp
+    /// Engineering:   SIMATIC AX
+    /// Restrictions:  -
+    /// Functionality: Function for retrieving a compensation value from a compensation array for a given x-value.
+    ///================================================================================
+    FUNCTION GetCompensationValueLinear : LREAL
         VAR_INPUT
-            xValue : LREAL;   // input for array lookup
-            compensationArray : ARRAY[*] of LGenComp_typeCompensationElement;
+            /// Input for array lookup
+            xValue : LREAL;
+
+        END_VAR
+
+        VAR_IN_OUT
+            /// Array with compensation relation
+            compensationArray : ARRAY[*] of typeCompensationElement;
         END_VAR
 
         VAR_OUTPUT
-            status : LGenComp_GetCompensationValueStatus;   // Status information
+            /// Status information
+            status : GetCompensationValueStatus;
         END_VAR
 
         VAR_TEMP
@@ -37,9 +43,8 @@ NAMESPACE Simatic.Ax.LGenComp
             tempYValue2 : LREAL;       // Y-value of second interpolation point
         END_VAR
 
-
         // Initialize status to valid
-        status := LGenComp_GetCompensationValueStatus#STATE_VALID;
+        status := GetCompensationValueStatus#STATE_VALID;
 
         // Get array boundaries
         tempLowerBoundary := LOWER_BOUND(compensationArray,1);
@@ -49,13 +54,13 @@ NAMESPACE Simatic.Ax.LGenComp
         // If array has only one element, return that element's y-value
         IF tempUpperBoundary = tempLowerBoundary THEN
             // Return the only available y-value
-            LGenComp_GetCompensationValueLinear := compensationArray[tempLowerBoundary].yValue;
+            GetCompensationValueLinear := compensationArray[tempLowerBoundary].yValue;
             // Check if input matches the single point's x-value
             IF xValue = compensationArray[tempLowerBoundary].xValue THEN
-                status := LGenComp_GetCompensationValueStatus#STATE_VALID;
+                status := GetCompensationValueStatus#STATE_VALID;
             ELSE
                 // Input is outside range, clamping was applied
-                status := LGenComp_GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE;
+                status := GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE;
             END_IF;
             RETURN;
         END_IF;
@@ -81,7 +86,7 @@ NAMESPACE Simatic.Ax.LGenComp
         tempXValue := Clamp(value := xValue, min := tempXMin, max := tempXMax);
         // Set warning status if clamping occurred
         IF xValue < tempXMin OR xValue > tempXMax THEN
-            status := LGenComp_GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE;
+            status := GetCompensationValueStatus#WAR_RANGE_CLAMPING_ACTIVE;
         END_IF;
 
         // Binary search to find the two adjacent points that bracket tempXValue
@@ -110,10 +115,10 @@ NAMESPACE Simatic.Ax.LGenComp
         IF tempXValue1 = tempXValue2 THEN
             // Handle edge case: both points have same x-value
             // Return average of both y-values
-            LGenComp_GetCompensationValueLinear := (tempYValue1 + tempYValue2) / 2.0;
+            GetCompensationValueLinear := (tempYValue1 + tempYValue2) / 2.0;
         ELSE
             // Standard linear interpolation formula: y = y1 + (y2-y1) * (x-x1) / (x2-x1)
-            LGenComp_GetCompensationValueLinear := tempYValue1 + (tempYValue2 - tempYValue1) * (tempXValue - tempXValue1) / (tempXValue2 - tempXValue1);
+            GetCompensationValueLinear := tempYValue1 + (tempYValue2 - tempYValue1) * (tempXValue - tempXValue1) / (tempXValue2 - tempXValue1);
         END_IF;
     END_FUNCTION
 END_NAMESPACE

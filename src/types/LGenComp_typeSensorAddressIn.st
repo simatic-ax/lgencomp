@@ -1,6 +1,6 @@
 NAMESPACE Simatic.Ax.LGenComp
     TYPE
-        LGenComp_typeSensorAddressIn : STRUCT
+        typeSensorAddressIn : STRUCT
             dbNumber : UINT;
             offset : DINT;
             area : BYTE;
