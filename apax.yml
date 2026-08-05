@@ -34,7 +34,7 @@ devDependencies:
   '@ax/sdk': ^2510.1.0
   "@simatic-ax/snippetscollection": ^1.0.0
   "@ax/st-lang-contrib-library-toolbox": ^0.21.1
-  "@ax/axunit-mocking": ^8.4.20
+  "@ax/axunit-mocking": ^9.0.0
 
 # Project variables
 variables:
