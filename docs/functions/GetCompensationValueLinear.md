@@ -2,7 +2,7 @@
 
 ## Description
 
-The function `GetCompensationValueLinear` can be used to fetch a y-value (compensation value) from a compensation array of type [`typeCompensationElement`](../types/LGenComp_typeCompensationElement.md) for a given input value.
+The function `GetCompensationValueLinear` can be used to fetch a y-value (compensation value) from a compensation array of type [`typeCompensationElement`](../types/typeCompensationElement.md) for a given input value.
 
 Given an input position (xValue) and a compensation array, the function performs a binary search to locate the two adjacent data points that bracket the input value, then applies linear interpolation to calculate the precise compensation value.
 
@@ -24,7 +24,7 @@ Given an input position (xValue) and a compensation array, the function performs
 
 | Parameter | Type | Description |
 | --------- | ---- | ----------- |
-| `status` | [GetCompensationValueStatus](../constants/LGenComp_GetCompensationValueStatusCodes.md) | Status information about the function execution |
+| `status` | [GetCompensationValueStatus](../constants/GetCompensationValueStatusCodes.md) | Status information about the function execution |
 
 ### Return Value
 

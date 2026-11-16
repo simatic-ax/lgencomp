@@ -1,12 +1,12 @@
 {
     "NamespaceSupport": {
     "scope": "javascript,typescript,st",
-    "prefix": ["CreateNamespace for <Library>"],
+    "prefix": ["CreateNamespace for LGenComp"],
     "body": [
-        "NAMESPACE Simatic.Ax.<Library>",
+        "NAMESPACE Simatic.Ax.LGenComp",
         "\t$0",
         "END_NAMESPACE"
     ],
     "description": "Creates an namespace template"
-    }    
+    }
 }

@@ -1,6 +1,6 @@
 USING AxUnit;
-USING Siemens.Simatic.MemoryAccess;
-USING Siemens.Simatic.MotionControl.Native;
+USING Siemens.S7.MemoryAccess;
+USING Siemens.S7.MotionControl;
 USING Simatic.Ax.LGenComp;
 
 NAMESPACE Simatic.Ax.LGenComp.Tests
@@ -19,7 +19,7 @@ NAMESPACE Simatic.Ax.LGenComp.Tests
                 result : DWORD;
             END_VAR
 
-            Mocking.Mock(NAME_OF(Siemens.Simatic.MemoryAccess.ReadMemory), NAME_OF(ReadMemoryMock));
+            Mocking.Mock(NAME_OF(Siemens.S7.MemoryAccess.ReadMemory), NAME_OF(ReadMemoryMock));
             ReadMemory(sensor.area, sensor.offset, result);
             Assert.Equal(expected := DWORD#16#12345678, actual := result);
         END_METHOD
@@ -30,7 +30,7 @@ NAMESPACE Simatic.Ax.LGenComp.Tests
                 value : DWORD := DWORD#16#4321_9876;
             END_VAR
 
-            Mocking.Mock(NAME_OF(Siemens.Simatic.MemoryAccess.WriteMemory), NAME_OF(WriteMemoryMock));
+            Mocking.Mock(NAME_OF(Siemens.S7.MemoryAccess.WriteMemory), NAME_OF(WriteMemoryMock));
             WriteMemory(sensor.area, sensor.offset, value);
             Assert.Equal(expected := DWORD#16#4321_9876, actual := value);
         END_METHOD
@@ -57,7 +57,7 @@ NAMESPACE Simatic.Ax.LGenComp.Tests
 
     FUNCTION ReadMemoryMock : BOOL
         VAR_INPUT
-            area : Siemens.Simatic.MemoryAccess.ReadArea;
+            area : Siemens.S7.MemoryAccess.ReadArea;
             byteOffset : DINT;
         END_VAR
         VAR_OUTPUT
@@ -69,7 +69,7 @@ NAMESPACE Simatic.Ax.LGenComp.Tests
 
     FUNCTION WriteMemoryMock
         VAR_INPUT
-            area : Siemens.Simatic.MemoryAccess.WriteArea;
+            area : Siemens.S7.MemoryAccess.WriteArea;
             byteOffset : DINT;
             value : DWORD;
         END_VAR

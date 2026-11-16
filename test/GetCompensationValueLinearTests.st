@@ -1,7 +1,7 @@
 USING AxUnit.Assert;
 USING Simatic.Ax.LGenComp;
 
-NAMESPACE Simatic.Ax.lgencomp.Tests
+NAMESPACE Simatic.Ax.LGenComp.Tests
     {TestFixture}
     CLASS TestLGenCompGetCompensationValueLinear
         VAR

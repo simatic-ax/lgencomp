@@ -13,4 +13,4 @@ Data structure representing a single compensation point in a 2D lookup table. Us
 
 ## Usage
 
-This type is used in arrays to define compensation relation for functions the function [`GetCompensationValueLinear`](../functions/LGenComp_GetCompensationValueLinear.md), where linear interpolation is performed between data points to calculate the appropriate compensation value for any given position.
+This type is used in arrays to define compensation relation for functions the function [`GetCompensationValueLinear`](../functions/GetCompensationValueLinear.md), where linear interpolation is performed between data points to calculate the appropriate compensation value for any given position.

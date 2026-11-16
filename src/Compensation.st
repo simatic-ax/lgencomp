@@ -1,5 +1,5 @@
-USING Siemens.Simatic.MemoryAccess;
-USING Siemens.Simatic.MotionControl.Native;
+USING Siemens.S7.MemoryAccess;
+USING Siemens.S7.MotionControl;
 USING System.Math;
 NAMESPACE Simatic.Ax.LGenComp
     ///================================================================================

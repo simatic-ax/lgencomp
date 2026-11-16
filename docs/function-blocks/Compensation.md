@@ -77,7 +77,7 @@ For Telegram 105, the `G1_XIST1` value is transferred at an offset of 12 bytes, 
         | PZD10 | G1_XIST2 | Position actual value 2 from encoder 1 |
 </details><br>
 
-The subsequent user program is then operated using the corrected encoder positions. Therefore, the function block must be called in an `MC_PreServo` task from the Siemens.Simatic.Tasks library.
+The subsequent user program is then operated using the corrected encoder positions. Therefore, the function block must be called in an `MC_PreServo` task from the Siemens.S7.Tasks library.
 
 ## Interface
 
@@ -102,7 +102,7 @@ The subsequent user program is then operated using the corrected encoder positio
 | valid | BOOL | TRUE: Valid set of output values available at the FB |
 | busy | BOOL | TRUE: FB is not finished and new output values can be expected |
 | error | BOOL | TRUE: An error occurred during the execution of the FB |
-| status | [CompensationStatus](../constants/LGenComp_CompensationStatusCodes.md) | 16#0000 - 16#7FFF: Status of the FB, 16#8000 - 16#FFFF: Error identification |
+| status | [CompensationStatus](../constants/CompensationStatusCodes.md) | 16#0000 - 16#7FFF: Status of the FB, 16#8000 - 16#FFFF: Error identification |
 
 ### Status and error codes
 

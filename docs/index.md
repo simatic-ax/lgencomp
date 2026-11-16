@@ -18,21 +18,21 @@ The library is organized into the following main components:
 
 ### Compensation Function Block
 
-- [`Compensation`](./function-blocks/LGenComp_Compensation.md): Function block for compensating an axis position by a compensation value via encoder increment adjustment.
+- [`Compensation`](./function-blocks/Compensation.md): Function block for compensating an axis position by a compensation value via encoder increment adjustment.
 
 ### Compensation value retrieval
 
-- [`GetCompensationValueLinear`](./functions/LGenComp_GetCompensationValueLinear.md): Function for retrieving a compensation value from a compensation array for a given x-value with a linear interpolation.
+- [`GetCompensationValueLinear`](./functions/GetCompensationValueLinear.md): Function for retrieving a compensation value from a compensation array for a given x-value with a linear interpolation.
 
 ### Data Types
 
-- [`typeCompensationElement`](./types/LGenComp_typeCompensationElement.md)
-- [`typeSensorAddressIn`](./types/LGenComp_typeSensorAddressIn.md)
+- [`typeCompensationElement`](./types/typeCompensationElement.md)
+- [`typeSensorAddressIn`](./types/typeSensorAddressIn.md)
 
 ### Constants
 
-- [`GetCompensationValueStatusCodes`](./constants/LGenComp_GetCompensationValueStatusCodes.md): Status codes for the compensation value retrieval function.
-- [`CompensationStatusCodes`](./constants/LGenComp_CompensationStatusCodes.md): Status codes for the compensation function block.
+- [`GetCompensationValueStatusCodes`](./constants/GetCompensationValueStatusCodes.md): Status codes for the compensation value retrieval function.
+- [`CompensationStatusCodes`](./constants/CompensationStatusCodes.md): Status codes for the compensation function block.
 
 ## Migration from TIA Portal
 
