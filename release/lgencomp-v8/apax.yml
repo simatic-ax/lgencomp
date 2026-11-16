@@ -1,0 +1,52 @@
+# General information
+name: "@simatic-ax/lgencomp-v8"
+version: 0.0.0-placeholder
+author: Siemens AG
+
+# Description will be displayed in the apax extension
+description: Provided functionality to compensate the position of a SIMATIC Motion Control technology object based on a compensation table.
+type: lib
+
+#URL to the repository
+repository:
+  type: git
+  url: https://github.com/simatic-ax/lgencomp
+
+# Registry information, to other npm-registries where Apax packages are located
+# '@scope': 'registry-url'
+registries:
+  '@simatic-ax': 'https://npm.pkg.github.com/'
+
+# The public key to verify dependencies coming from the GitHub community. This ensures, that the package is
+# not tampered with.
+publicKeys:
+  "@simatic-ax":
+    "v1": "3792a7e926775425ccdd29ceed8c368c3008b5b33d7d5550b3cb1f58093e1dff"
+    "v2": "7af3e394eb2b285a3d99ab8e1f745cc6db75704b30a80393339c721a92ffffd9"
+
+# Catalog to be installed
+catalogs:
+  "@ax-as/s7-catalog": ^2610.0.0
+
+# Dependencies
+devDependencies:
+  "@ax-as/s7-sdk": ^2610.0.2
+  "@simatic-ax/snippetscollection": ^1.1.0
+  "@ax-as/axunit-mocking": ^10.0.136
+
+dependencies:
+  "@ax-mc/s7-motioncontrol-v8-lib": ^11.0.27
+  "@ax-as/system-math-lib": ^11.0.232
+  "@ax-as/s7-memoryaccess-lib": ^7.0.40
+
+scripts:
+  mk:release: apax make -p MakeConfigName:release
+  mk:debug: apax make -p MakeConfigName:debug
+
+# Files, which will be shipped with the library
+files:
+  - docs
+  - bin/release
+  - '!bin/release/lastused*'
+  - LICENSE.md
+  - README.md

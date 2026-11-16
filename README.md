@@ -1,4 +1,4 @@
-# @simatic-ax/lgencomp
+# @simatic-ax/lgencomp-v10
 
 ## Description
 
@@ -14,13 +14,21 @@ The library operates by directly manipulating encoder increments using predefine
 
 ## Getting started
 
+Pick the package matching your Motion Control version:
+
+| Package                    | Motion Control version |
+| -------------------------- | ---------------------- |
+| `@simatic-ax/lgencomp-v8`  | V8                     |
+| `@simatic-ax/lgencomp-v9`  | V9                     |
+| `@simatic-ax/lgencomp-v10` | V10                    |
+
 Install with Apax:
 
 > If not yet done login to the GitHub registry first.
 > More information you'll find [here](https://github.com/simatic-ax/.github/blob/main/docs/personalaccesstoken.md)
 
 ```cli
-apax add @simatic-ax/lgencomp
+apax add @simatic-ax/lgencomp-v10
 ```
 
 Add the namespace in your ST code:
@@ -51,11 +59,11 @@ The values for the compensation relation need to be captured by the user, typica
 
 | Functions   | Description             |
 |-------------|-------------------------|
-| [GetCompensationValueLinear](./docs/functions/LGenComp_GetCompensationValueLinear.md)      | Function for retrieving a compensation value from a compensation table for a given x-value with a linear interpolation. |
+| [GetCompensationValueLinear](./docs/functions/GetCompensationValueLinear.md)      | Function for retrieving a compensation value from a compensation table for a given x-value with a linear interpolation. |
 
 | Function Blocks | Description           |
 |-----------------|-----------------------|
-| [Compensation](./docs/function-blocks/LGenComp_Compensation.md)         | Function block for compensating an axis position by a compensation value via encoder increment adjustment |
+| [Compensation](./docs/function-blocks/Compensation.md)         | Function block for compensating an axis position by a compensation value via encoder increment adjustment |
 
 ## Examples
 
@@ -71,8 +79,8 @@ The example is based on a TIAX workflow, where the Hardware Configuration and th
 The compensation must be called in an MC_PreServo task. Configure this in your configuration file and pass the axis references to the program inputs. The configuration and main program cover the [two-dimensional sag compensation](#two-dimensional-sag-compensation) use case. For the leadscrew example, the configuration needs to be adjusted.
 
 ```iec-st
-USING Siemens.Simatic.Tasks;
-USING Siemens.Simatic.MotionControl.Native;
+USING Siemens.S7.Tasks;
+USING Siemens.S7.MotionControl;
 
 CONFIGURATION MyConfiguration
     TASK Main(Priority := 1);
@@ -103,10 +111,10 @@ END_CONFIGURATION
 
 #### 2. Obtaining Axis References
 
-Convert technology objects (DB_ANY) to axis references using the `AsPositioningAxisRef()` function from the Siemens.Simatic.MotionControl.Native package. This is typically done during initialization:
+Convert technology objects (DB_ANY) to axis references using the `AsPositioningAxisRef()` function from the Siemens.S7.MotionControl package. This is typically done during initialization:
 
 ```iec-st
-USING Siemens.Simatic.MotionControl.Native;
+USING Siemens.S7.MotionControl;
 
 PROGRAM MainProgram
     VAR_EXTERNAL
@@ -193,7 +201,7 @@ This example uses the axis references passed from the configuration as inputs, m
 
 ```iec-st
 USING Simatic.Ax.LGenComp;
-USING Siemens.Simatic.MotionControl.Native;
+USING Siemens.S7.MotionControl;
 
 PROGRAM MotionPreServoProgram
     VAR_EXTERNAL
@@ -245,7 +253,7 @@ PROGRAM MotionPreServoProgram
 END_PROGRAM
 ```
 
-In this example, both the X-axis and Y-axis positions are evaluated as inputs for separate compensation table lookups. Two instances of [`Compensation`](./docs/function-blocks/LGenComp_Compensation.md) are called, both targeting the Z-axis with their respective compensation increments.
+In this example, both the X-axis and Y-axis positions are evaluated as inputs for separate compensation table lookups. Two instances of [`Compensation`](./docs/function-blocks/Compensation.md) are called, both targeting the Z-axis with their respective compensation increments.
 
 ### Leadscrew compensation
 
@@ -266,7 +274,7 @@ The program implementation:
 
 ```iec-st
 USING Simatic.Ax.LGenComp;
-USING Siemens.Simatic.MotionControl.Native;
+USING Siemens.S7.MotionControl;
 
 PROGRAM MotionPreServoProgram
     VAR_EXTERNAL
@@ -322,7 +330,7 @@ The compensation functionality must be called in an **MC-PreServo** task. The fo
 
 #### Activation cycles
 
-The [`Compensation`](./docs/function-blocks/LGenComp_Compensation.md) function block features the `activationCycles` parameter for implementing a "soft start" behavior. This value parameterizes gradual ramping during both enabling and disabling states:
+The [`Compensation`](./docs/function-blocks/Compensation.md) function block features the `activationCycles` parameter for implementing a "soft start" behavior. This value parameterizes gradual ramping during both enabling and disabling states:
 
 ```iec-st
 compInstance(
